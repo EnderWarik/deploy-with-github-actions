@@ -83,3 +83,4 @@ https://github.com/Roggired/ITMO/blob/master/general/how-to-connect-to-helios.md
 ![Проверка деплоя](images/Снимок%20экрана%202025-09-21%20в%2021.32.56.png)
 
 10.Отлаживаем
+![Проверка](images/Снимок%20экрана%202025-09-21%20в%2021.44.12.png)
