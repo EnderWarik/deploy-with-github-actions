@@ -37,26 +37,42 @@ jobs:
             nikola init -qd site
           fi
 
-      - name: Publish report.md as a page
+      - name: Prepare report and images
         run: |
+          set -e
           mkdir -p site/pages
-          cp -f report.md site/pages/report.md
+          # фикс ссылок на картинки: страница будет по адресу pages/report/
+          # картинки публикуем в /images → относительный путь ../../images/ из pages/report/
+          sed -E 's#\]\(images/#](../../images/#g; s#src=\"images/#src=\"../../images/#g' report.md > site/pages/report.md
+          # копируем изображения в стандартную статику Nikola (files → /)
+          mkdir -p site/files/images
+          if [ -d images ]; then
+            cp -R images/* site/files/images/ || true
+          fi
 
       - name: Build Nikola site
         working-directory: site
         run: nikola build
 
-      - name: Set report.md as homepage
+      - name: Set homepage redirect to report page
         working-directory: site
         run: |
-          set -e
-          REPORT_HTML="output/pages/report/index.html"
-          if [ -f "$REPORT_HTML" ]; then
-            cp "$REPORT_HTML" output/index.html
-          else
-            echo "Report page not found at $REPORT_HTML" >&2
-            exit 1
-          fi
+          mkdir -p output
+          cat > output/index.html << 'EOF'
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta charset="utf-8">
+            <meta http-equiv="refresh" content="0; url=pages/report/">
+            <meta name="robots" content="noindex">
+            <title>Redirecting…</title>
+          </head>
+          <body>
+            <p>Redirecting to <a href="pages/report/">report</a>…</p>
+            <script>location.replace('pages/report/');</script>
+          </body>
+          </html>
+          EOF
 
       - name: Upload website artifact
         uses: actions/upload-artifact@v4
