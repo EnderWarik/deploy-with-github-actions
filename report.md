@@ -1,3 +1,7 @@
+ВЫПОЛНЕН ЧЕЛЛЕНДЖ
+https://github.com/EnderWarik/helios-deploy-action/releases/tag/v0.0.1
+
+
 ## Исследования:
 1.Отечественные CDN для ускорения доставки контента
 

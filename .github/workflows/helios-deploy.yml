@@ -94,44 +94,14 @@ jobs:
           name: website
           path: ${{ env.WEBSITE_DIR }}
 
-      - name: Pack website into tar.gz
-        run: |
-          tar -czf site.tgz -C "${WEBSITE_DIR}" .
-
-      - name: Install sshpass
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-
-      - name: Trust Helios host key
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -p "${HELIOS_PORT}" "${HELIOS_HOST}" >> ~/.ssh/known_hosts
-
-      - name: Upload archive
-        env:
-          HELIOS_USER: ${{ secrets.HELIOS_USER }}
-          HELIOS_PASSWORD: ${{ secrets.HELIOS_PASSWORD }}
-        run: |
-          sshpass -p "${HELIOS_PASSWORD}" scp -P "${HELIOS_PORT}" site.tgz "${HELIOS_USER}@${HELIOS_HOST}:~/"
-
-      - name: Deploy (unpack to ~/public_html)
-        env:
-          HELIOS_USER: ${{ secrets.HELIOS_USER }}
-          HELIOS_PASSWORD: ${{ secrets.HELIOS_PASSWORD }}
-          CLEAN: ${{ github.event.inputs.clean }}
-        run: |
-          sshpass -p "${HELIOS_PASSWORD}" ssh -p "${HELIOS_PORT}" "${HELIOS_USER}@${HELIOS_HOST}" "
-            set -e
-            mkdir -p ~/public_html
-            if [ \"${CLEAN}\" = \"true\" ]; then
-              rm -rf ~/public_html/*
-            fi
-            tar -xzf ~/site.tgz -C ~/public_html
-            rm -f ~/site.tgz
-          "
-
-      - name: Done URL
-        run: echo "Доступно по адресу https://se.ifmo.ru/~${{ secrets.HELIOS_USER }}/"
+      - name: Deploy with composite action
+        uses: EnderWarik/helios-deploy-action@v0.0.1
+        with:
+          helios_user: ${{ secrets.HELIOS_USER }}
+          helios_password: ${{ secrets.HELIOS_PASSWORD }}
+          website_dir: ${{ env.WEBSITE_DIR }}
+          clean: ${{ github.event.inputs.clean }}
+          helios_host: ${{ env.HELIOS_HOST }}
+          helios_port: ${{ env.HELIOS_PORT }}
 
 
