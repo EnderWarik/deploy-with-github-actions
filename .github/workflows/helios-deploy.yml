@@ -31,6 +31,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install "nikola[extras]"
 
+      - name: Initialize Nikola site if missing
+        run: |
+          if [ ! -f conf.py ]; then
+            nikola init -qd .
+          fi
+
+      - name: Publish report.md as a page
+        run: |
+          mkdir -p pages
+          cp -f report.md pages/report.md
+
       - name: Build Nikola site
         run: nikola build
 
