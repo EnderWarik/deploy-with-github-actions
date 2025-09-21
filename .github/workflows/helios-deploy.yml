@@ -11,8 +11,8 @@ on:
         description: "Очистить ~/public_html перед развёртыванием"
         required: true
         default: "true"
-  # push:
-  #   branches: [main]
+  push:
+    branches: [main]
 
 jobs:
   build:
