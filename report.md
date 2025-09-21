@@ -1,5 +1,6 @@
 ВЫПОЛНЕН ЧЕЛЛЕНДЖ
-https://github.com/EnderWarik/helios-deploy-action/releases/tag/v0.0.1
+[Helios Deploy Action v0.0.1](https://github.com/EnderWarik/helios-deploy-action/releases/tag/v0.0.1)
+
 
 
 ## Исследования:
