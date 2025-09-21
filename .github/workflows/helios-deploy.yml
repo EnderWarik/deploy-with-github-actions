@@ -1,0 +1,97 @@
+name: Build and Deploy to Helios
+
+on:
+  workflow_dispatch:
+    inputs:
+      website_dir:
+        description: "Папка со статикой (копируется в ~/public_html)"
+        required: true
+        default: "output"
+      clean:
+        description: "Очистить ~/public_html перед развёртыванием"
+        required: true
+        default: "true"
+  # push:
+  #   branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install Nikola
+        run: |
+          python -m pip install --upgrade pip
+          pip install "nikola[extras]"
+
+      - name: Build Nikola site
+        run: nikola build
+
+      - name: Upload website artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: website
+          path: output/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      HELIOS_HOST: helios.cs.ifmo.ru
+      HELIOS_PORT: "2222"
+      WEBSITE_DIR: ${{ github.event.inputs.website_dir || 'output' }}
+    steps:
+      - name: Download website artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website
+          path: ${{ env.WEBSITE_DIR }}
+
+      - name: Pack website into tar.gz
+        run: |
+          tar -czf site.tgz -C "${WEBSITE_DIR}" .
+
+      - name: Install sshpass
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sshpass
+
+      - name: Trust Helios host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${HELIOS_PORT}" "${HELIOS_HOST}" >> ~/.ssh/known_hosts
+
+      - name: Upload archive
+        env:
+          HELIOS_USER: ${{ secrets.HELIOS_USER }}
+          HELIOS_PASSWORD: ${{ secrets.HELIOS_PASSWORD }}
+        run: |
+          sshpass -p "${HELIOS_PASSWORD}" scp -P "${HELIOS_PORT}" site.tgz "${HELIOS_USER}@${HELIOS_HOST}:~/"
+
+      - name: Deploy (unpack to ~/public_html)
+        env:
+          HELIOS_USER: ${{ secrets.HELIOS_USER }}
+          HELIOS_PASSWORD: ${{ secrets.HELIOS_PASSWORD }}
+          CLEAN: ${{ github.event.inputs.clean }}
+        run: |
+          sshpass -p "${HELIOS_PASSWORD}" ssh -p "${HELIOS_PORT}" "${HELIOS_USER}@${HELIOS_HOST}" "
+            set -e
+            mkdir -p ~/public_html
+            if [ \"${CLEAN}\" = \"true\" ]; then
+              rm -rf ~/public_html/*
+            fi
+            tar -xzf ~/site.tgz -C ~/public_html
+            rm -f ~/site.tgz
+          "
+
+      - name: Done URL
+        run: echo "Доступно по адресу https://se.ifmo.ru/~${{ secrets.HELIOS_USER }}/"
+
+
