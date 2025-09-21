@@ -58,6 +58,6 @@ https://github.com/Roggired/ITMO/blob/master/general/how-to-connect-to-helios.md
 Деплою в ~/public_html
 
 9. Проверяем, что все задеплоилось
-
+![Проверка деплоя](images/Снимок%20экрана%202025-09-21%20в%2021.32.56.png)
 
 10.Отлаживаем

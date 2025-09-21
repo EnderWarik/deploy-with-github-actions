@@ -46,6 +46,18 @@ jobs:
         working-directory: site
         run: nikola build
 
+      - name: Set report.md as homepage
+        working-directory: site
+        run: |
+          set -e
+          REPORT_HTML="output/pages/report/index.html"
+          if [ -f "$REPORT_HTML" ]; then
+            cp "$REPORT_HTML" output/index.html
+          else
+            echo "Report page not found at $REPORT_HTML" >&2
+            exit 1
+          fi
+
       - name: Upload website artifact
         uses: actions/upload-artifact@v4
         with:
