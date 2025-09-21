@@ -6,7 +6,7 @@ on:
       website_dir:
         description: "Папка со статикой (копируется в ~/public_html)"
         required: true
-        default: "output"
+        default: "site/output"
       clean:
         description: "Очистить ~/public_html перед развёртыванием"
         required: true
@@ -33,23 +33,24 @@ jobs:
 
       - name: Initialize Nikola site if missing
         run: |
-          if [ ! -f conf.py ]; then
-            nikola init -qd .
+          if [ ! -f site/conf.py ]; then
+            nikola init -qd site
           fi
 
       - name: Publish report.md as a page
         run: |
-          mkdir -p pages
-          cp -f report.md pages/report.md
+          mkdir -p site/pages
+          cp -f report.md site/pages/report.md
 
       - name: Build Nikola site
+        working-directory: site
         run: nikola build
 
       - name: Upload website artifact
         uses: actions/upload-artifact@v4
         with:
           name: website
-          path: output/
+          path: site/output/
 
   deploy:
     needs: build
@@ -57,7 +58,7 @@ jobs:
     env:
       HELIOS_HOST: helios.cs.ifmo.ru
       HELIOS_PORT: "2222"
-      WEBSITE_DIR: ${{ github.event.inputs.website_dir || 'output' }}
+      WEBSITE_DIR: ${{ github.event.inputs.website_dir || 'site/output' }}
     steps:
       - name: Download website artifact
         uses: actions/download-artifact@v4
