@@ -115,7 +115,7 @@ jobs:
       - name: Validate HTML (vnu-jar via java)
         run: |
           JAR=$(node -e "console.log(require('vnu-jar'))")
-          java -jar "$JAR" --errors-only site/output
+          find site/output -type f -name '*.html' -print0 | xargs -0 -r -n 50 java -jar "$JAR" --errors-only
 
       - name: Check home has link to report
         run: |
