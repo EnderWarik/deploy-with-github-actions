@@ -67,10 +67,7 @@ jobs:
         run: |
           set -e
           mkdir -p site/pages
-          # фикс ссылок на картинки: страница будет по адресу pages/report/
-          # картинки публикуем в /images → относительный путь ../../images/ из pages/report/
           sed -E 's#\]\(images/#](../../images/#g; s#src=\"images/#src=\"../../images/#g' report.md > site/pages/report.md
-          # копируем изображения в стандартную статику Nikola (files → /)
           mkdir -p site/files/images
           if [ -d images ]; then
             cp -R images/* site/files/images/ || true
