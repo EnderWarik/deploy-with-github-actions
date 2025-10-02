@@ -88,3 +88,23 @@ https://github.com/Roggired/ITMO/blob/master/general/how-to-connect-to-helios.md
 
 ### 10. Отлаживаем
 ![Проверка](images/Снимок%20экрана%202025-09-21%20в%2021.44.12.png)
+
+# CI/CD (GitHub Actions)
+
+Кратко о файле `.github/workflows/helios-deploy.yml`:
+
+- build:
+  - Установка Python и Node
+  - Сборка CSS через PostCSS
+  - Nikola: `nikola build` (использует `site/conf.py` и тему `custom`)
+  - Минификация HTML c `html-minifier-terser`
+  - Публикация артефакта `website` (директория `site/output/`)
+
+- tests (needs: build):
+  - Скачивание артефакта
+  - Валидация HTML `vnu-jar` (только *.html)
+  - Локальная проверка ссылки на отчёт через `python -m http.server`
+
+- deploy (needs: tests):
+  - Деплой артефакта на Helios через `EnderWarik/helios-deploy-action@v0.0.1`
+  - Используются секреты `HELIOS_USER` и `HELIOS_PASSWORD`, директория `site/output`, очистка включена
