@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="${lang}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${blog_title}</title>
+    <meta name="description" content="${blog_description}">
+    <meta name="author" content="${author}">
+    <link rel="stylesheet" href="${url_replacer('rel_path', rel_link, '/assets/css/main.css', lang)}">
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <a class="logo" href="${abs_link('/')}">${blog_title}</a>
+        <nav class="nav">
+          <a href="${abs_link('/pages/home/')}">Главная</a>
+          <a href="${abs_link('/pages/report/')}">Отчёт</a>
+          <a href="${abs_link('/archive.html')}">Архив</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="content container">
+      ${content}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>© ${date.year} ${author} — Powered by Nikola</p>
+      </div>
+      <script src="${url_replacer('rel_path', rel_link, '/assets/js/main.js', lang)}"></script>
+    </footer>
+  </body>
+  </html>
+
+

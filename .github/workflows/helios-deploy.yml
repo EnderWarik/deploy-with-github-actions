@@ -37,6 +37,28 @@ jobs:
             nikola init -qd site
           fi
 
+      - name: Configure site metadata and theme
+        run: |
+          set -e
+          if ! grep -q "^THEME =" site/conf.py; then
+            echo "THEME = 'custom'" >> site/conf.py
+          else
+            sed -i 's/^THEME = .*/THEME = '\''custom'\''/' site/conf.py || true
+          fi
+          sed -i 's/^BLOG_TITLE = .*/BLOG_TITLE = "EnderWar Site"/' site/conf.py || true
+          sed -i 's/^BLOG_DESCRIPTION = .*/BLOG_DESCRIPTION = "Кастомная тема Nikola"/' site/conf.py || true
+          sed -i 's/^DEFAULT_LANG = .*/DEFAULT_LANG = "ru"/' site/conf.py || true
+          sed -i 's/^TIMEZONE = .*/TIMEZONE = "Europe/Moscow"/' site/conf.py || true
+          if ! grep -q "^TYPOGRIFY =" site/conf.py; then
+            echo "TYPOGRIFY = True" >> site/conf.py
+          fi
+
+      - name: Copy custom theme assets
+        run: |
+          mkdir -p site/themes/custom/assets/css site/themes/custom/assets/js
+          cp -f site/themes/custom/assets/css/main.css site/assets/css/main.css || true
+          cp -f site/themes/custom/assets/js/main.js site/assets/js/main.js || true
+
       - name: Prepare report and images
         run: |
           set -e
@@ -54,7 +76,7 @@ jobs:
         working-directory: site
         run: nikola build
 
-      - name: Set homepage redirect to report page
+      - name: Set homepage redirect to author home page
         working-directory: site
         run: |
           mkdir -p output
@@ -63,13 +85,13 @@ jobs:
           <html lang="en">
           <head>
             <meta charset="utf-8">
-            <meta http-equiv="refresh" content="0; url=pages/report/">
+            <meta http-equiv="refresh" content="0; url=pages/home/">
             <meta name="robots" content="noindex">
             <title>Redirecting…</title>
           </head>
           <body>
-            <p>Redirecting to <a href="pages/report/">report</a>…</p>
-            <script>location.replace('pages/report/');</script>
+            <p>Redirecting to <a href="pages/home/">home</a>…</p>
+            <script>location.replace('pages/home/');</script>
           </body>
           </html>
           EOF
