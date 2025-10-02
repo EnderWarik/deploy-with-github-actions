@@ -51,6 +51,11 @@ jobs:
           fi
           sed -i 's/^BLOG_TITLE = .*/BLOG_TITLE = "EnderWar Site"/' site/conf.py || true
           sed -i 's/^BLOG_DESCRIPTION = .*/BLOG_DESCRIPTION = "Кастомная тема Nikola"/' site/conf.py || true
+          if ! grep -q "^BLOG_AUTHOR =" site/conf.py; then
+            echo "BLOG_AUTHOR = 'Алексей Москалёв'" >> site/conf.py
+          else
+            sed -i "s/^BLOG_AUTHOR = .*/BLOG_AUTHOR = 'Алексей Москалёв'/" site/conf.py || true
+          fi
           sed -i 's/^DEFAULT_LANG = .*/DEFAULT_LANG = "ru"/' site/conf.py || true
           sed -i 's/^TIMEZONE = .*/TIMEZONE = "Europe/Moscow"/' site/conf.py || true
           if ! grep -q "^TYPOGRIFY =" site/conf.py; then
