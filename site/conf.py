@@ -1,6 +1,6 @@
 THEME = 'custom'
 
-BLOG_TITLE = "EnderWar Site"
+BLOG_TITLE = "Алексей Москалёв"
 BLOG_DESCRIPTION = "Кастомная тема Nikola"
 BLOG_AUTHOR = "Алексей Москалёв"
 

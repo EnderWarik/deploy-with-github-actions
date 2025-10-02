@@ -26,15 +26,25 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install Nikola
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Nikola and Node deps
         run: |
           python -m pip install --upgrade pip
           pip install "nikola[extras]"
+          npm ci
+
+      - name: Build CSS with PostCSS
+        run: |
+          npm run build:css
 
       - name: Copy custom theme assets
         run: |
           mkdir -p site/themes/custom/assets/css site/themes/custom/assets/js
-          cp -f site/themes/custom/assets/css/main.css site/assets/css/main.css || true
           cp -f site/themes/custom/assets/js/main.js site/assets/js/main.js || true
 
       - name: Prepare report and images
@@ -53,6 +63,10 @@ jobs:
         run: |
           nikola clean -a || true
           nikola build
+
+      - name: Minify HTML
+        run: |
+          npm run minify:html
 
       - name: Set homepage redirect to author home page
         working-directory: site
