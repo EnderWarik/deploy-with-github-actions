@@ -121,7 +121,8 @@ jobs:
         run: |
           python -m http.server 8000 -d site/output &
           sleep 1
-          curl -sSf http://127.0.0.1:8000/pages/home/ | grep '/pages/report/'
+          HTML=$(curl -sSf http://127.0.0.1:8000/pages/home/)
+          echo "$HTML" | grep -q 'href="/pages/report/"' || echo "$HTML" | grep -q 'href="../report/"'
 
   deploy:
     needs: tests
