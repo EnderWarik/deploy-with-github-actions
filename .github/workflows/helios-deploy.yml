@@ -108,9 +108,14 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Validate HTML (vnu-jar via npx)
+      - name: Install vnu-jar
         run: |
-          npx -y vnu-jar@latest --errors-only site/output
+          npm install --no-audit --no-fund vnu-jar@latest
+
+      - name: Validate HTML (vnu-jar via java)
+        run: |
+          JAR=$(node -e "console.log(require('vnu-jar'))")
+          java -jar "$JAR" --errors-only site/output
 
       - name: Check home has link to report
         run: |
