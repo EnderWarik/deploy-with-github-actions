@@ -33,8 +33,12 @@ jobs:
 
       - name: Initialize Nikola site if missing
         run: |
+          set -e
           if [ ! -f site/conf.py ]; then
-            nikola init -qd site
+            mkdir -p site
+            nikola init -qd _nikola_tmp
+            mv _nikola_tmp/conf.py site/conf.py
+            rm -rf _nikola_tmp
           fi
 
       - name: Configure site metadata and theme
