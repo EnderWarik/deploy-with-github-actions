@@ -83,6 +83,7 @@ jobs:
           set -e
           find site/pages -mindepth 1 -maxdepth 1 -type d ! -name home ! -name report -exec rm -rf {} + || true
           find site/pages -type f ! -name 'home.md' ! -name 'report.md' -delete || true
+          rm -rf site/stories site/posts site/galleries site/listings || true
 
       - name: Build Nikola site
         working-directory: site
@@ -136,7 +137,7 @@ jobs:
           helios_user: ${{ secrets.HELIOS_USER }}
           helios_password: ${{ secrets.HELIOS_PASSWORD }}
           website_dir: ${{ env.WEBSITE_DIR }}
-          clean: ${{ github.event.inputs.clean }}
+          clean: ${{ github.event.inputs.clean || 'true' }}
           helios_host: ${{ env.HELIOS_HOST }}
           helios_port: ${{ env.HELIOS_PORT }}
 
