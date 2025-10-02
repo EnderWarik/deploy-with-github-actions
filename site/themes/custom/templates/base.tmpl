@@ -6,7 +6,7 @@
     <title>${blog_title}</title>
     <meta name="description" content="${blog_description}">
     <meta name="author" content="${blog_author}">
-    <link rel="stylesheet" href="${url_replacer('rel_path', rel_link, '/assets/css/main.css', lang)}">
+    <link rel="stylesheet" href="${url_replacer('rel_path', lang, '/assets/css/main.css')}">
   </head>
   <body>
     <header class="site-header">
@@ -28,7 +28,7 @@
       <div class="container">
         <p>© ${blog_author} — Powered by Nikola</p>
       </div>
-      <script src="${url_replacer('rel_path', rel_link, '/assets/js/main.js', lang)}"></script>
+      <script src="${url_replacer('rel_path', lang, '/assets/js/main.js')}"></script>
     </footer>
   </body>
   </html>
