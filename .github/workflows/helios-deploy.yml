@@ -103,9 +103,14 @@ jobs:
           name: website
           path: site/output
 
-      - name: Validate HTML (vnu-jar)
+      - name: Setup Node for validation
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Validate HTML (vnu-jar via npx)
         run: |
-          docker run --rm -v "$PWD/site/output:/site" ghcr.io/validator/validator:latest java -jar /vnu.jar --errors-only /site || (echo 'HTML validation failed' && exit 1)
+          npx -y vnu-jar@latest --errors-only site/output
 
       - name: Check home has link to report
         run: |
