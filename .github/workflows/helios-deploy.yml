@@ -78,9 +78,17 @@ jobs:
             cp -R images/* site/files/images/ || true
           fi
 
+      - name: Remove demo pages
+        run: |
+          set -e
+          find site/pages -mindepth 1 -maxdepth 1 -type d ! -name home ! -name report -exec rm -rf {} + || true
+          find site/pages -type f ! -name 'home.md' ! -name 'report.md' -delete || true
+
       - name: Build Nikola site
         working-directory: site
-        run: nikola build
+        run: |
+          nikola clean -a || true
+          nikola build
 
       - name: Set homepage redirect to author home page
         working-directory: site
