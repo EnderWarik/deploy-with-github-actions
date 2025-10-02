@@ -6,16 +6,15 @@
     <title>${blog_title}</title>
     <meta name="description" content="${blog_description}">
     <meta name="author" content="${blog_author}">
-    <link rel="stylesheet" href="${url_replacer('rel_path', lang, '/assets/css/main.css')}">
+    <link rel="stylesheet" href="../../assets/css/main.css">
   </head>
   <body>
     <header class="site-header">
       <div class="container">
-        <a class="logo" href="${url_replacer('rel_path', lang, '/index.html')}">${blog_title}</a>
+        <a class="logo" href="../../">${blog_title}</a>
         <nav class="nav">
           <a href="../home/">Главная</a>
           <a href="../report/">Отчёт</a>
-          <a href="${url_replacer('rel_path', lang, '/archive.html')}">Архив</a>
         </nav>
       </div>
     </header>
@@ -28,7 +27,7 @@
       <div class="container">
         <p>© ${blog_author} — Powered by Nikola</p>
       </div>
-      <script src="${url_replacer('rel_path', lang, '/assets/js/main.js')}"></script>
+      <script src="../../assets/js/main.js"></script>
     </footer>
   </body>
   </html>
