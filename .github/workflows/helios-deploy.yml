@@ -31,37 +31,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install "nikola[extras]"
 
-      - name: Initialize Nikola site if missing
-        run: |
-          set -e
-          if [ ! -f site/conf.py ]; then
-            mkdir -p site
-            nikola init -qd _nikola_tmp
-            mv _nikola_tmp/conf.py site/conf.py
-            rm -rf _nikola_tmp
-          fi
-
-      - name: Configure site metadata and theme
-        run: |
-          set -e
-          if ! grep -q "^THEME =" site/conf.py; then
-            echo "THEME = 'custom'" >> site/conf.py
-          else
-            sed -i 's/^THEME = .*/THEME = '\''custom'\''/' site/conf.py || true
-          fi
-          sed -i 's/^BLOG_TITLE = .*/BLOG_TITLE = "EnderWar Site"/' site/conf.py || true
-          sed -i 's/^BLOG_DESCRIPTION = .*/BLOG_DESCRIPTION = "Кастомная тема Nikola"/' site/conf.py || true
-          if ! grep -q "^BLOG_AUTHOR =" site/conf.py; then
-            echo "BLOG_AUTHOR = 'Алексей Москалёв'" >> site/conf.py
-          else
-            sed -i "s/^BLOG_AUTHOR = .*/BLOG_AUTHOR = 'Алексей Москалёв'/" site/conf.py || true
-          fi
-          sed -i 's/^DEFAULT_LANG = .*/DEFAULT_LANG = "ru"/' site/conf.py || true
-          sed -i 's/^TIMEZONE = .*/TIMEZONE = "Europe/Moscow"/' site/conf.py || true
-          if ! grep -q "^TYPOGRIFY =" site/conf.py; then
-            echo "TYPOGRIFY = True" >> site/conf.py
-          fi
-
       - name: Copy custom theme assets
         run: |
           mkdir -p site/themes/custom/assets/css site/themes/custom/assets/js
@@ -78,13 +47,7 @@ jobs:
             cp -R images/* site/files/images/ || true
           fi
 
-      - name: Remove demo pages
-        run: |
-          set -e
-          find site/pages -mindepth 1 -maxdepth 1 -type d ! -name home ! -name report -exec rm -rf {} + || true
-          find site/pages -type f ! -name 'home.md' ! -name 'report.md' -delete || true
-          rm -rf site/stories site/posts site/galleries site/listings || true
-
+    
       - name: Build Nikola site
         working-directory: site
         run: |
