@@ -11,11 +11,11 @@
   <body>
     <header class="site-header">
       <div class="container">
-        <a class="logo" href="${pathto('index.html', lang)}">${blog_title}</a>
+        <a class="logo" href="${url_replacer('rel_path', lang, '/index.html')}">${blog_title}</a>
         <nav class="nav">
-          <a href="${pathto('pages/home/', lang)}">Главная</a>
-          <a href="${pathto('pages/report/', lang)}">Отчёт</a>
-          <a href="${pathto('archive.html', lang)}">Архив</a>
+          <a href="${url_replacer('rel_path', lang, '/pages/home/')}">Главная</a>
+          <a href="${url_replacer('rel_path', lang, '/pages/report/')}">Отчёт</a>
+          <a href="${url_replacer('rel_path', lang, '/archive.html')}">Архив</a>
         </nav>
       </div>
     </header>
@@ -28,7 +28,7 @@
       <div class="container">
         <p>© ${blog_author} — Powered by Nikola</p>
       </div>
-      <script src="${pathto('assets/js/main.js', lang)}"></script>
+      <script src="${url_replacer('rel_path', lang, '/assets/js/main.js')}"></script>
     </footer>
   </body>
   </html>
