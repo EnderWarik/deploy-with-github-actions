@@ -105,7 +105,7 @@ jobs:
 
       - name: Validate HTML (vnu-jar)
         run: |
-          docker run --rm -v "$PWD/site/output:/site" ghcr.io/validator/validator:latest --errors-only /site || (echo 'HTML validation failed' && exit 1)
+          docker run --rm -v "$PWD/site/output:/site" ghcr.io/validator/validator:latest java -jar /vnu.jar --errors-only /site || (echo 'HTML validation failed' && exit 1)
 
       - name: Check home has link to report
         run: |
