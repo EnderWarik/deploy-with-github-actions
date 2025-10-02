@@ -80,8 +80,28 @@ jobs:
           name: website
           path: site/output/
 
-  deploy:
+  tests:
     needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download website artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: website
+          path: site/output
+
+      - name: Validate HTML (vnu-jar)
+        run: |
+          docker run --rm -v "$PWD/site/output:/site" ghcr.io/validator/validator:latest --errors-only /site || (echo 'HTML validation failed' && exit 1)
+
+      - name: Check home has link to report
+        run: |
+          python -m http.server 8000 -d site/output &
+          sleep 1
+          curl -sSf http://127.0.0.1:8000/pages/home/ | grep '/pages/report/'
+
+  deploy:
+    needs: tests
     runs-on: ubuntu-latest
     env:
       HELIOS_HOST: helios.cs.ifmo.ru
