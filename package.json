@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build:css": "postcss site/themes/custom/assets/css/main.css -o site/assets/css/main.css --env production",
-    "minify:html": "html-minifier-terser -r --collapse-whitespace --remove-comments --minify-css true --minify-js true -o . site/output"
+    "minify:html": "html-minifier-terser --input-dir site/output --output-dir site/output --file-ext html --collapse-whitespace --remove-comments --minify-css true --minify-js true"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
